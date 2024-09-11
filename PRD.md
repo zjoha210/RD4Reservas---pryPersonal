@@ -81,7 +81,7 @@ El propósito de este producto es crear una aplicación web que permita a los ho
     - Implementación en Google Cloud Platform para asegurar disponibilidad, escalabilidad y rendimiento del producto.
 
 
-### **Casos de uso:**
+### **Diagrama de Casos de uso:**
 
 ![Diagrama de Casos de Uso](./res/casos-de-uso-full.png)
 
@@ -254,7 +254,6 @@ La capa **Controlador (Controller)** gestiona la comunicación entre el Modelo y
     - **Componente de Autenticación de Huéspedes**: Maneja el inicio de sesión del huésped mediante número de reserva y documento de identidad.
     - **Componente de Formulario de Registro/Actualización de Datos**: Permite a los huéspedes ingresar y actualizar sus datos personales.
     - **Componente de Check-in de Recepcionista**: Permite al recepcionista verificar, registrar y actualizar datos durante el check-in.
-    
     - **Panel Administrativo**: Interfaz para el personal del hotel, con capacidades para gestionar datos de huéspedes y supervisar procesos.
 
 #### Servidor (Backend)
@@ -300,15 +299,13 @@ La capa **Controlador (Controller)** gestiona la comunicación entre el Modelo y
 
 ### **3.1. Diagrama del modelo de datos:**
 
+El siguiente **Diagrama de Modelo de Documentos** presenta el modelo de datos diseñado para cubrir las funcionalidades de la aplicación web: 
+
 ![Diagrama de Modelo de Documentos BD](./res/bd_diagrama-de-modelo-de-documentos.png)
 
 ### **3.2. Descripción de entidades principales:**
 
-A continuación, se describen con detalle cada una de las colecciones en la base de datos, los campos asociados, las validaciones aplicadas, y las relaciones entre las colecciones.
-
-### Descripción Detallada del Diagrama de Modelo de Documentos
-
-A continuación se describe en detalle las colecciones más importantes, los campos asociados, las validaciones aplicadas, y las relaciones entre  colecciones.
+A continuación se describen con detalle cada una de las colecciones en la base de datos, los campos asociados, las validaciones aplicadas, y las relaciones entre las colecciones.
 
 #### **1. Reservas (`Reservas`)**
 - **Descripción:** Contiene información básica de la reserva importada del sistema externo y se utiliza para gestionar el registro de datos de los huéspedes.
@@ -390,6 +387,18 @@ A continuación se describe en detalle las colecciones más importantes, los cam
   - `idUsusarioActualiza`: string, Identificador del usuario que actualizó el registro.
     - **Reglas de Validación:** Debe existir en la colección **Usuarios**.
 
+#### 5. Notificaciones (`Notificaciones`)
+- **Descripción:** Almacena las notificaciones enviadas a los huéspedes, como invitaciones para completar su registro de datos.
+- **Campos:**
+  - `id`: string, Identificador único de la notificación. (**UNIQUE**)
+  - `numeroReserva`: string, Número de la reserva a la que está asociada la notificación.
+    - **Reglas de Validación:** Debe existir en la colección **Reservas**.
+  - `tipo`: string, Tipo de notificación.
+    - **Reglas de Validación:** Debe ser uno de los valores permitidos: `'invitacion_checkin'`.
+  - `mensaje`: string, Contenido del mensaje de la notificación.
+    - **Reglas de Validación:** Debe ser un string, con un tamaño máximo de 500 caracteres.
+  - `fechaEnvio`: date, Fecha y hora en que se envió la notificación.
+
 #### **4. Usuarios (`Usuarios`)**
 - **Descripción:** Representa a los usuarios que se loguean en el sistema.
 - **Campos:**
@@ -408,18 +417,6 @@ A continuación se describe en detalle las colecciones más importantes, los cam
   - `idUsusarioActualiza`: string, Identificador del usuario que actualizó el registro.
     - **Reglas de Validación:** Debe existir en la colección **Usuarios**.
 
-#### 5**. Notificaciones (`Notificaciones`)**
-- **Descripción:** Almacena las notificaciones enviadas a los huéspedes, como invitaciones para completar su registro de datos.
-- **Campos:**
-  - `id`: string, Identificador único de la notificación. (**UNIQUE**)
-  - `numeroReserva`: string, Número de la reserva a la que está asociada la notificación.
-    - **Reglas de Validación:** Debe existir en la colección **Reservas**.
-  - `tipo`: string, Tipo de notificación.
-    - **Reglas de Validación:** Debe ser uno de los valores permitidos: `'invitacion_checkin'`.
-  - `mensaje`: string, Contenido del mensaje de la notificación.
-    - **Reglas de Validación:** Debe ser un string, con un tamaño máximo de 500 caracteres.
-  - `fechaEnvio`: date, Fecha y hora en que se envió la notificación.
-
 ---
 
 ## 4. Especificación de la API
@@ -430,13 +427,92 @@ No aplica.
 
 ## 5. Historias de Usuario
 
-> Documenta 3 de las historias de usuario principales utilizadas durante el desarrollo, teniendo en cuenta las buenas prácticas de producto al respecto.
+En la siguiente tabla se presenta el Backlog Priorizado acordado por el equipo Tech; la tabla refleja las decisiones estratégicas del equipo, ayudando a priorizar las historias más relevantes y manejar eficientemente los recursos y esfuerzos en el desarrollo con respecto al objetivo del proyecto. 
+
+| Historia de Usuario                                    | Impacto | Complejidad | Riesgos | Dependencias        | Canti Historias que Bloquea | Canti Historias Bloqueantes | Total chat GPT | Impacto | Complejidad | Riesgos | Dependencias | Total Equipo Tech | Observaciones                                                                 |
+|---------------------------------------------------------|---------|-------------|---------|----------------------|-----------------------------|------------------------------|----------------|---------|-------------|---------|--------------|-------------------|--------------------------------------------------------------------------------|
+| HU08 - Integración de Datos con el Sistema de Reservas   | 10      | 10          | 10      | HU01, HU02           | 4                           | 2                            | 46             | 10      | 10          | 10      |              | 36                | Pierde prioridad para el ejercicio académico. <br> Se reemplazará con datos dummy     |
+| HU09 - Protección y Seguridad de los Datos Personales    | 10      | 5           | 10      | HU01, HU02, HU08     | 3                           | 3                            | 46             | 10      | 5           | 10      |              | 31                | Pierde prioridad para el ejercicio académico.                                     |
+| HU01 - Autenticación de Reserva                         | 10      | 5           | 1       | HU10                 | 5                           | 1                            | 32             | 10      | 5           | 10      |              | 31                |                                                                                 |
+| HU02 - Registro de Datos Personales                     | 10      | 5           | 5       | HU01                 | 3                           | 2                            | 35             | 10      | 10          | 5       |              | 30                |                                                                                 |
+| HU05 - Registro de Datos de Huéspedes Adicionales       | 10      | 10          | 10      | HU01, HU02, HU04     | 1                           | 3                            | 39             | 10      | 10          | 5       |              | 29                |                                                                                 |
+| HU06 - Gestión de Datos por el Personal del Hotel       | 5       | 10          | 5       | HU01, HU02, HU10     | 0                           | 3                            | 33             | 10      | 10          | 5       |              | 28                |                                                                                 |
+| HU10 - Login del Personal del Hotel                     | 10      | 5           | 1       | Ninguna              | 1                           | 0                            | 18             | 10      | 5           | 10      |              | 26                |                                                                                 |
+| HU03 - Actualización de Datos Personales                | 10      | 5           | 5       | HU01, HU02           | 2                           | 2                            | 34             | 5       | 10          | 5       |              | 24                |                                                                                 |
+| HU04 - Verificación de Datos durante el Check-in        | 10      | 10          | 5       | HU01, HU02, HU03     | 1                           | 3                            | 39             | 10      | 5           | 5       |              | 24                |                                                                                 |
+| HU07 - Envío de Enlace para Registro de Datos           | 10      | 5           | 5       | HU08                 | 0                           | 1                            | 26             | 1       | 5           | 5       |              | 12                | Se puede hacer manualmente                                                     |
+*Convenciones de la tabla para los puntajes de prioridad: 10: Alta, 5: Media, 1: Baja*
+
+
+> Documenta 3 de las historias de usuario principales utilizadas durante el desarrollo, teniendo en cuenta las buenas prácticas de producto al respecto.  
+
+> A fecha de hoy tengo planeado documentar estas tres historias principales: 
+
 
 **Historia de Usuario 1**
+**HU01 - Autenticación de Reserva**
+
+***Como huésped, quiero poder autenticar mi reserva utilizando mi número de reserva y documento de identidad para acceder al formulario de registro de datos personales antes del check-in.***
+
+*Descripción de Funcionalidad:* Permite al huésped ingresar su número de reserva y documento de identidad en una interfaz web para validar su reserva en el sistema. Si la autenticación es exitosa, se le redirige al formulario de registro o actualización de datos personales.
+
+*Criterios de Aceptación:*
+
+1. Dado que el huésped tiene un número de reserva válido y un documento de identidad asociado,  
+   cuando ingresa ambos datos en la interfaz de autenticación,  
+   entonces el sistema valida la información y, si es correcta, permite al huésped acceder al formulario de registro de datos personales.
+
+2. Dado que el huésped intenta autenticarse con datos incorrectos o incompletos,  
+   cuando se envían los datos a la interfaz de autenticación,  
+   entonces el sistema muestra un mensaje de error indicando que la autenticación ha fallado y ofrece la opción de intentar nuevamente.
+
+3. Dado que el huésped ha completado exitosamente el proceso de autenticación,  
+   cuando se redirige al huésped al formulario de registro de datos,  
+   entonces el sistema debe mantener activa la sesión del usuario durante el tiempo de inactividad permitido para completar el registro.
+
 
 **Historia de Usuario 2**
+**HU02 - Registro de Datos Personales**
+
+***Como huésped, quiero registrar mis datos personales antes del check-in para agilizar el proceso de llegada al hotel.***
+
+*Descripción de Funcionalidad:* Proporciona un formulario web donde el huésped puede ingresar información personal, como nombre, apellido, documento de identidad, fecha de nacimiento, nacionalidad, dirección, teléfono, correo electrónico, y firma. Esta información se guarda en la base de datos del hotel.
+
+*Criterios de Aceptación:*
+
+1. Dado que el huésped ha accedido al formulario de registro de datos personales,  
+   cuando ingresa toda la información requerida (nombre, apellido, documento de identidad, fecha de nacimiento, etc.),  
+   entonces el sistema guarda correctamente la información ingresada en la base de datos.
+
+2. Dado que el huésped intenta registrar datos personales,  
+   cuando deja uno o más campos requeridos vacíos o con un formato incorrecto,  
+   entonces el sistema muestra un mensaje de error indicando los campos que requieren corrección antes de permitir guardar.
+
+3. Dado que el huésped ha completado el formulario de registro de datos personales,  
+   cuando confirma la acción de guardar,  
+   entonces el sistema debe mostrar un mensaje de confirmación indicando que el registro de datos ha sido exitoso y permitir la opción de actualización o edición posterior.
+
 
 **Historia de Usuario 3**
+**HU06 - Gestión de Datos por el Personal del Hotel**
+
+***Como personal del hotel, quiero poder gestionar los datos de los huéspedes registrados en el sistema para mantener la información precisa y actualizada.***
+
+*Descripción de Funcionalidad:* Permite al personal del hotel buscar, visualizar y editar los datos de los huéspedes en el sistema según los permisos asignados. No se permite la eliminación de registros; en su lugar, los datos incorrectos deben corregirse a través de la opción de actualización. También se proporciona la opción de sincronizar manualmente con el sistema externo si no se encuentra una reserva.
+
+*Criterios de Aceptación:*
+
+1. Dado que un miembro del personal del hotel ha iniciado sesión correctamente en el sistema,  
+   cuando accede a la interfaz de gestión de datos,  
+   entonces debe poder buscar un huésped por nombre, número de reserva, o documento de identidad.
+
+2. Dado que el personal del hotel ha encontrado el registro del huésped,  
+   cuando selecciona la opción de editar los datos personales del huésped,  
+   entonces debe poder modificar cualquier campo editable y guardar los cambios, los cuales se reflejan de inmediato en la base de datos.
+
+3. Dado que el personal del hotel no puede encontrar una reserva para el huésped titular,  
+   cuando selecciona la opción de sincronización,  
+   entonces el sistema debe ejecutar el mecanismo de sincronización con el sistema externo para intentar obtener los datos más recientes.  Si aún así no se puede encontrar una reserva para el huésped titular, se debería manejar con un mensaje de error claro que ofrezca opciones para solucionar el problema, como verificar los datos ingresados o contactar al administrador.
 
 ---
 
@@ -445,10 +521,129 @@ No aplica.
 > Documenta 3 de los tickets de trabajo principales del desarrollo, uno de backend, uno de frontend, y uno de bases de datos. Da todo el detalle requerido para desarrollar la tarea de inicio a fin teniendo en cuenta las buenas prácticas al respecto. 
 
 **Ticket 1**
+*Base de datos
+
+### Ticket 1A: Habilitar Autenticación Anónima en Firebase
+
+- **Título:** Habilitar Autenticación Anónima en Firebase
+
+- **Descripción Detallada:**  
+  Configurar la autenticación anónima en Firebase Authentication para permitir que los huéspedes se autentiquen utilizando un número de reserva y un documento de identidad sin crear una cuenta permanente. Este ticket incluye las tareas de habilitar la autenticación anónima y configurar reglas de seguridad en Firebase:
+  - Acceder a la consola de Firebase y seleccionar el proyecto.
+  - Ir a la sección de **Authentication**.
+  - En la pestaña **Métodos de Inicio de Sesión**, activar la opción de **Autenticación Anónima**.
+  - Configurar reglas de seguridad básicas en Firebase para garantizar que solo los usuarios autenticados anónimamente puedan acceder a los datos de reserva.
+  - Realizar pruebas iniciales de autenticación anónima para verificar que los usuarios puedan autenticarse y recibir un token de sesión válido.
+
+- **Criterios de Aceptación:**  
+  1. Dado que el desarrollador ha habilitado la autenticación anónima en Firebase,  
+     cuando un huésped intenta autenticarse sin una cuenta permanente,  
+     entonces el sistema debe permitir la autenticación anónima y proporcionar un token de sesión válido.
+  2. Dado que se han configurado las reglas de seguridad en Firebase,  
+     cuando un usuario no autenticado intenta acceder a los recursos,  
+     entonces el sistema debe denegar el acceso y devolver un error de autenticación.
+
+- **Prioridad:** Alta
+
+- **Estimación de Esfuerzo:** 2 horas
+
+- **Asignado a:** Desarrollador de Firebase/Bases de Datos
+
+- **Etiquetas:** Backend, Firebase
+
+- **Comentarios:**  
+  - Asegurarse de que las pruebas de autenticación anónima cubran todos los casos posibles de uso.
+
+- **Enlaces:**  
+  - [Firebase Authentication Documentation](https://firebase.google.com/docs/auth?hl=es-419)  
+
+
 
 **Ticket 2**
+*Backend
+
+### Ticket 2A: Crear Endpoint de Validación de Reserva en Backend
+
+- **Título:** Crear Endpoint de Validación de Reserva en Backend
+
+- **Descripción Detallada:**  
+  Crear un endpoint en el servidor Node.js que reciba solicitudes de validación de reservas y valide los datos proporcionados. Este ticket incluye las siguientes tareas:
+  - Configurar un nuevo endpoint que reciba solicitudes POST con el número de reserva, tipo de documento y número de documento de identidad.
+  - Definir un esquema de datos para validar los parámetros de entrada y devolver mensajes de error apropiados si los datos son inválidos.
+  - Implementar manejo de errores y respuestas para asegurar que se devuelvan códigos de estado HTTP apropiados (200 para éxito, 400 para errores de validación, 404 para no encontrado, etc.).
+
+- **Criterios de Aceptación:**  
+  1. Dado que se ha creado el endpoint de validación de reserva,  
+     cuando se recibe una solicitud con número de reserva y documento de identidad,  
+     entonces la API debe validar los datos de entrada y responder en consecuencia.
+  2. Dado que se han implementado los mecanismos de manejo de errores,  
+     cuando ocurre un error en la solicitud,  
+     entonces la API debe devolver un mensaje de error adecuado.
+
+- **Prioridad:** Alta
+
+- **Estimación de Esfuerzo:** 3 horas
+
+- **Asignado a:** Desarrollador Backend (Node.js)
+
+- **Etiquetas:** Backend, API, Node.js
+
+- **Comentarios:**  
+  - Probar el endpoint con diferentes tipos de solicitudes para asegurar que todas las respuestas sean correctas.
+
+- **Enlaces:**  
+  - [Node.js REST API Best Practices](https://restfulapi.net/)
+
+
 
 **Ticket 3**
+*Frontend
+
+
+### Ticket 3: Desarrollar Pantalla de Autenticación en el Frontend
+
+- **Título:** Desarrollar Pantalla de Autenticación en el Frontend
+
+- **Descripción Detallada:**  
+  Crear una pantalla de autenticación en AngularJS donde el huésped pueda ingresar su número de reserva y documento de identidad. Este ticket incluye las siguientes tareas:
+  - Diseñar la interfaz de usuario (UI) para la autenticación:
+    - Crear un formulario con campos para el número de reserva, tipo de documento y número de documento de identidad.
+    - Implementar validaciones de cliente para asegurar que los campos requeridos estén completos y en el formato correcto.
+  - Integrar con la API de validación de reserva:
+    - Desarrollar servicios en AngularJS para enviar los datos ingresados por el usuario a la API de validación de reserva.
+    - Manejar las respuestas de la API (éxito, error, autenticación fallida) y mostrar mensajes adecuados en la interfaz de usuario.
+  - Realizar pruebas de interfaz y funcionalidad:
+    - Probar el formulario de autenticación en varios navegadores y dispositivos para asegurar la compatibilidad.
+    - Verificar que todas las validaciones y mensajes de error funcionen correctamente.
+    - Asegurar que la pantalla de autenticación esté completamente funcional y sin errores antes de la integración final.
+
+- **Criterios de Aceptación:**  
+  1. Dado que el formulario de autenticación ha sido desarrollado,  
+     cuando el huésped ingresa los datos de la reserva,  
+     entonces la pantalla debe validar los datos de entrada y mostrar los mensajes de error correspondientes si es necesario.
+  2. Dado que se ha integrado con la API de validación de reserva,  
+     cuando el huésped envía sus credenciales,  
+     entonces la pantalla debe mostrar el resultado de la autenticación de forma clara (éxito o error).
+  3. Dado que se han realizado pruebas de interfaz y funcionalidad,  
+     cuando la pantalla se utiliza en diferentes dispositivos y navegadores,  
+     entonces la funcionalidad debe ser consistente y sin errores.
+
+- **Prioridad:** Alta
+
+- **Estimación de Esfuerzo:** 6 horas
+
+- **Asignado a:** Equipo de Frontend (Desarrollador Frontend)
+
+- **Etiquetas:** Frontend, AngularJS, UI/UX
+
+- **Comentarios:**  
+  - Coordinar con el equipo de backend para asegurar que la integración de la API sea exitosa.
+  - Asegurarse de que la interfaz de usuario esté alineada con la guía de estilo del producto.
+
+- **Enlaces:**  
+  - [AngularJS Documentation](https://angularjs.org/)  
+  - [REST API Error Handling Best Practices](https://restfulapi.net/)  
+
 
 ---
 
